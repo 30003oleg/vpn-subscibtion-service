@@ -14,6 +14,9 @@ import { User } from './users/users.model.js';
 import { RolesModule } from './roles/roles.module.js';
 import { Role } from './roles/roles.model.js';
 import { UserRoles } from './roles/user-roles.model.js';
+import { AuthController } from './auth/auth.controller.js';
+import { AuthService } from './auth/auth.service.js';
+import { AuthModule } from './auth/auth.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -34,9 +37,10 @@ AppModule = __decorate([
             }),
             UsersModule,
             RolesModule,
+            AuthModule,
         ],
-        controllers: [AppController],
-        providers: [AppService],
+        controllers: [AppController, AuthController],
+        providers: [AppService, AuthService],
     })
 ], AppModule);
 export { AppModule };

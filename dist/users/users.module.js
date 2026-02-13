@@ -19,6 +19,7 @@ UsersModule = __decorate([
         controllers: [UsersController],
         providers: [UsersService],
         imports: [SequelizeModule.forFeature([User, Role, UserRoles]), RolesModule],
+        exports: [UsersService],
     })
 ], UsersModule);
 export { UsersModule };

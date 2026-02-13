@@ -32,6 +32,12 @@ let UsersService = class UsersService {
     async getAllUsers() {
         return await this.userRespository.findAll({ include: { all: true } });
     }
+    async getUserByTgId(tg_id) {
+        return await this.userRespository.findOne({
+            where: { tg_id },
+            include: { all: true },
+        });
+    }
 };
 UsersService = __decorate([
     Injectable(),
