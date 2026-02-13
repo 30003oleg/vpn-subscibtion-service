@@ -11,32 +11,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Injectable } from '@nestjs/common';
-import { User } from './users.model.js';
 import { InjectModel } from '@nestjs/sequelize';
-import { RolesService } from '../roles/roles.service.js';
-let UsersService = class UsersService {
-    userRespository;
-    roleService;
-    constructor(userRespository, roleService) {
-        this.userRespository = userRespository;
-        this.roleService = roleService;
+import { Role } from './roles.model.js';
+let RolesService = class RolesService {
+    roleRepository;
+    constructor(roleRepository) {
+        this.roleRepository = roleRepository;
     }
-    async createUser(dto) {
-        const user = await this.userRespository.create(dto);
-        const role = await this.roleService.getRole('client');
-        if (role) {
-            await user.$set('roles', [role.id]);
-        }
-        return user;
+    async createRole(dto) {
+        return await this.roleRepository.create(dto);
     }
-    async getAllUsers() {
-        return await this.userRespository.findAll({ include: { all: true } });
+    async getRole(value) {
+        return await this.roleRepository.findOne({ where: { value } });
     }
 };
-UsersService = __decorate([
+RolesService = __decorate([
     Injectable(),
-    __param(0, InjectModel(User)),
-    __metadata("design:paramtypes", [Object, RolesService])
-], UsersService);
-export { UsersService };
-//# sourceMappingURL=users.service.js.map
+    __param(0, InjectModel(Role)),
+    __metadata("design:paramtypes", [Object])
+], RolesService);
+export { RolesService };
+//# sourceMappingURL=roles.service.js.map

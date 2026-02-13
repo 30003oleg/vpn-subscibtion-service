@@ -5,21 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller.js';
-import { UsersService } from './users.service.js';
+import { RolesService } from './roles.service.js';
+import { RolesController } from './roles.controller.js';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './users.model.js';
-import { Role } from '../roles/roles.model.js';
-import { UserRoles } from '../roles/user-roles.model.js';
-import { RolesModule } from '../roles/roles.module.js';
-let UsersModule = class UsersModule {
+import { Role } from './roles.model.js';
+import { User } from '../users/users.model.js';
+import { UserRoles } from './user-roles.model.js';
+let RolesModule = class RolesModule {
 };
-UsersModule = __decorate([
+RolesModule = __decorate([
     Module({
-        controllers: [UsersController],
-        providers: [UsersService],
-        imports: [SequelizeModule.forFeature([User, Role, UserRoles]), RolesModule],
+        providers: [RolesService],
+        controllers: [RolesController],
+        imports: [SequelizeModule.forFeature([Role, User, UserRoles])],
+        exports: [RolesService],
     })
-], UsersModule);
-export { UsersModule };
-//# sourceMappingURL=users.module.js.map
+], RolesModule);
+export { RolesModule };
+//# sourceMappingURL=roles.module.js.map

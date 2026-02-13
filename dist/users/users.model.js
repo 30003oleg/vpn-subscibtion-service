@@ -8,13 +8,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Model, Table, } from 'sequelize-typescript';
+import { Role } from '../roles/roles.model.js';
+import { UserRoles } from '../roles/user-roles.model.js';
 let User = class User extends Model {
     tg_id;
     username;
     firstName;
     lastName;
     registeredAt;
+    roles;
 };
 __decorate([
     ApiProperty({ example: 1, description: 'Уникальный индетификатор' }),
@@ -54,6 +57,10 @@ __decorate([
     Column({ type: DataType.DATE, allowNull: false }),
     __metadata("design:type", Date)
 ], User.prototype, "registeredAt", void 0);
+__decorate([
+    BelongsToMany(() => Role, () => UserRoles),
+    __metadata("design:type", Array)
+], User.prototype, "roles", void 0);
 User = __decorate([
     Table({ tableName: 'users' })
 ], User);
