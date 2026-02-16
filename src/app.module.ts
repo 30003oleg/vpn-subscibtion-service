@@ -8,6 +8,7 @@ import { User } from './users/users.model.js';
 import { RolesModule } from './roles/roles.module.js';
 import { Role } from './roles/roles.model.js';
 import { UserRoles } from './roles/user-roles.model.js';
+import { PaymentModule } from './payment/payment.module.js';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserRoles } from './roles/user-roles.model.js';
     }),
     UsersModule,
     RolesModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

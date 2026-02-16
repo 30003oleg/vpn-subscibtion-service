@@ -12,6 +12,11 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
+    const existingUser = await this.getUserByTgId(dto.tg_id);
+    if (existingUser) {
+      return existingUser;
+    }
+
     const user = await this.userRespository.create(dto);
     const role = await this.roleService.getRole('client');
     if (role) {

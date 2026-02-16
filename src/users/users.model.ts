@@ -32,10 +32,10 @@ export class User extends Model<User, UserCreationAttributes> {
   username: string | undefined;
   @ApiProperty({ example: 'Ivan', description: 'Имя пользователя' })
   @Column({ type: DataType.STRING, allowNull: true })
-  firstName: string | undefined;
+  first_Name: string | undefined;
   @ApiProperty({ example: 'Ivanov', description: 'Фамилия пользователя' })
   @Column({ type: DataType.STRING, allowNull: true })
-  lastName: string | undefined;
+  last_Name: string | undefined;
   @ApiProperty({
     example: '2026-02-13 12:35:20.921+03',
     description: 'Дата создания пользователя',
