@@ -1,8 +1,57 @@
-export interface Invoice {
+export type PaymentMethod = 'CryptoBot' | 'UKassa';
+
+export type TestFiatCurrencyType = FiatCurrencyType | 'JET';
+
+export type InvoiceStatus = 'active' | 'paid' | 'expired';
+
+export type CurrencyType = 'crypto' | 'fiat';
+
+export interface CryptoResponse<T> {
+  ok: boolean;
+  result?: T;
+  error?: any;
+  status: any; // Проверить существует ли вообще
+}
+
+export type CryptoAsset =
+  | 'USDT'
+  | 'TON'
+  | 'BTC'
+  | 'ETH'
+  | 'LTC'
+  | 'BNB'
+  | 'TRX'
+  | 'USDC';
+
+export type TestCryptoAsset = CryptoAsset | 'JET';
+
+export type FiatCurrencyType =
+  | 'USD'
+  | 'EUR'
+  | 'RUB'
+  | 'BYN'
+  | 'UAH'
+  | 'GBP'
+  | 'CNY'
+  | 'KZT'
+  | 'UZS'
+  | 'GEL'
+  | 'TRY'
+  | 'AMD'
+  | 'THB'
+  | 'INR'
+  | 'BRL'
+  | 'IDR'
+  | 'AZN'
+  | 'AED'
+  | 'PLN'
+  | 'ITS';
+
+export interface InvoiceInterface {
   invoice_id: number; // Unique ID for this invoice
   hash: string; // Hash of the invoice
-  currency_type: string; // Type of the price, can be “crypto” or “fiat”
-  asset?: string; // Cryptocurrency code. Available only if the value of the field currency_type is “crypto”
+  currency_type: CurrencyType; // Type of the price, can be “crypto” or “fiat”
+  asset?: TestCryptoAsset; // Cryptocurrency code. Available only if the value of the field currency_type is “crypto”
   fiat?: string; // Fiat currency code. Available only if the value of the field currency_type is “fiat”
   amount: string; // Amount of the invoice for which the invoice was created
   paid_asset?: string; // Cryptocurrency alphabetic code for which the invoice was paid. Available only if currency_type is “fiat” and status is “paid”
@@ -17,7 +66,7 @@ export interface Invoice {
   mini_app_invoice_url: string; // Use this URL to pay an invoice to the Telegram Mini App version
   web_app_invoice_url: string; // Use this URL to pay an invoice to the Web version of Crypto Bot
   description?: string; // Description for this invoice
-  status: 'active' | 'paid' | 'expired'; // Status of the transfer, can be “active”, “paid” or “expired”.
+  status: InvoiceStatus; // Status of the transfer, can be “active”, “paid” or “expired”.
   swap_to?: string; // The asset that will be attempted to be swapped into after the user makes a payment (the swap is not guaranteed)
   is_swapped?: boolean; // For invoices with the "paid" status, this flag indicates whether the swap was successful (only applicable if swap_to is set)
   swapped_uid?: string; // If is_swapped is true, stores the unique identifier of the swap
@@ -88,8 +137,28 @@ export interface AppStats {
   end_at: string; // The date on which the statistics calculation was ended in ISO 8601 format.
 }
 
-export interface CryptoResponse {
-  ok: boolean;
-  result?: any;
-  error?: any;
+export interface CreateInvoiceBody {
+  currency_type?: CurrencyType; // “crypto” or “fiat”. Defaults to crypto.
+  asset?: TestCryptoAsset; // Required if currency_type is “crypto”. Cryptocurrency alphabetic code.
+  fiat?: FiatCurrencyType; // Required if currency_type is “fiat”. Fiat currency code.
+  accepted_assets?: TestFiatCurrencyType; // List of cryptocurrency alphabetic codes separated comma. Assets which can be used to pay the invoice. Available only if currency_type is “fiat”. Supported assets: “USDT”, “TON”, “BTC”, “ETH”, “LTC”, “BNB”, “TRX” and “USDC” (and “JET” for testnet). Defaults to all currencies.
+  amount: string; // Amount of the invoice in float. For example: 125.50
+  swap_to?: string; // The asset that will be attempted to be swapped into after the user makes a payment (the swap is not guaranteed). Supported assets: "USDT", "TON", "TRX", "ETH", "SOL", "BTC", "LTC".
+  description?: string; // Description for the invoice. User will see this description when they pay the invoice. Up to 1024 characters.
+  hidden_message?: string; // Text of the message which will be presented to a user after the invoice is paid. Up to 2048 characters.
+  paid_btn_name?: 'viewItem' | 'openChannel' | 'openBot' | 'callback'; // Label of the button which will be presented to a user after the invoice is paid. Supported names:viewItem – “View Item”,openChannel – “View Channel”,openBot – “Open Bot”, callback – “Return”
+  paid_btn_url?: string; // Required if paid_btn_name is specified. URL opened using the button which will be presented to a user after the invoice is paid. You can set any callback link (for example, a success link or link to homepage). Starts with https or http.
+  payload?: string; // Any data you want to attach to the invoice (for example, user ID, payment ID, ect). Up to 4kb.
+  allow_comments?: boolean; // Allow a user to add a comment to the payment. Defaults to true.
+  allow_anonymous?: boolean; // Allow a user to pay the invoice anonymously. Defaults to true.
+  expires_in?: number; // You can set a payment time limit for the invoice in seconds. Values between 1-2678400 are accepted.
+}
+
+export interface GetInvoicesBody {
+  asset?: TestCryptoAsset; // Required if currency_type is “crypto”. Cryptocurrency alphabetic code.
+  fiat?: FiatCurrencyType; // Required if currency_type is “fiat”. Fiat currency code.
+  invoice_ids?: string; // List of invoice IDs separated by comma
+  status?: Omit<InvoiceStatus, 'expired'>; // Status of invoices to be returned. Available statuses: “active” and “paid”. Defaults to all statuses.
+  offset?: number; // Offset needed to return a specific subset of invoices. Defaults to 0.
+  count?: number; // Number of invoices to be returned. Values between 1-1000 are accepted. Defaults to 100.
 }
